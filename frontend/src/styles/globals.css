@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-primary-50 text-primary-900 font-sans antialiased;
+  }
+}
+
+@layer components {
+
+  .sidebar-link {
+    @apply flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-xl
+           text-primary-600 transition-all duration-200
+           hover:bg-primary-100 hover:text-primary-900;
+  }
+
+  .sidebar-link.active {
+    @apply bg-accent-50 text-accent-600 font-semibold;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-soft border border-primary-200/60;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5
+           bg-accent-600 text-white text-sm font-semibold rounded-xl
+           hover:bg-accent-700 transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2
+           disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5
+           bg-white text-primary-700 text-sm font-semibold rounded-xl
+           border border-primary-200 hover:bg-primary-50 transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary-200;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2.5 bg-white border border-primary-200 rounded-xl
+           text-sm text-primary-900 placeholder:text-primary-400
+           focus:outline-none focus:ring-2 focus:ring-accent-500/20 focus:border-accent-500
+           transition-all duration-200;
+  }
+
+  .section-title {
+    @apply text-xl font-bold text-primary-900 tracking-tight;
+  }
+
+  .label-text {
+    @apply text-xs font-bold text-primary-400 uppercase tracking-widest;
+  }
+}
+
+/* ── Dark mode overrides (plain CSS, avoids @apply dark: issue) ── */
+.dark body {
+  background-color: #151927;
+  color: #d1d5db;
+}
+
+.dark .card {
+  background-color: #1e2535;
+  border-color: #2d3748;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+}
+
+.dark .sidebar-link {
+  color: #9ca3af;
+}
+
+.dark .sidebar-link:hover {
+  background-color: #252d40;
+  color: #d1d5db;
+}
+
+.dark .sidebar-link.active {
+  background-color: rgba(37, 99, 235, 0.15);
+  color: #60a5fa;
+}
+
+.dark .input-field {
+  background-color: #252d40;
+  border-color: #2d3748;
+  color: #d1d5db;
+}
+
+.dark .input-field::placeholder {
+  color: #6b7280;
+}
+
+.dark .input-field:focus {
+  border-color: #3b82f6;
+}
+
+.dark .btn-secondary {
+  background-color: #252d40;
+  border-color: #2d3748;
+  color: #d1d5db;
+}
+
+.dark .btn-secondary:hover {
+  background-color: #2d3748;
+}
+
+.dark .section-title {
+  color: #d1d5db;
+}
+
+.dark .label-text {
+  color: #6b7280;
+}

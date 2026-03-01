@@ -178,18 +178,14 @@ Frontend will be running at: `http://localhost:5173`
 ## 📸 Screenshots
 
 > _Add screenshots of your Dashboard, Document Verification, and Audit Logs pages here._
+<img width="1897" height="866" alt="Screenshot 2026-03-02 015242" src="https://github.com/user-attachments/assets/56fc3af4-2ac4-480b-8232-f10f3bf6e581" />
+<img width="1898" height="866" alt="Screenshot 2026-03-02 015308" src="https://github.com/user-attachments/assets/b74331c4-2dc4-4d5a-ac16-2b913898918d" />
 
 ---
 
 ## 🤝 Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
 
 ---
 

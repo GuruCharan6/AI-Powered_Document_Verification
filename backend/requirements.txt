@@ -26,6 +26,7 @@ bcrypt==4.0.1
 passlib==1.7.4
 
 groq==0.2.1
+pymupdf
 
 # ML (optional for now - comment out if causing issues)
 # ultralytics==8.3.28

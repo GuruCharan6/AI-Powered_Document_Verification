@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'  // FIX 3: useNavigate moved here
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Shield, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
+import DocSentinelLogo from './DocSentinellogo'
 
 const Signup = () => {
   const [form, setForm] = useState({ email: '', password: '', full_name: '', department: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const { signup } = useAuth()
-  const navigate = useNavigate()  // FIX 3: navigation handled here, inside the Router
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -16,7 +17,7 @@ const Signup = () => {
     setLoading(true)
     try {
       await signup(form)
-      navigate('/')  // FIX 3: redirect to home after successful signup
+      navigate('/')
     } catch (err) {
       let errorMsg = 'Signup failed'
       if (err.response) {
@@ -35,12 +36,19 @@ const Signup = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-primary-50 p-4">
       <div className="w-full max-w-md">
+
+        {/* Logo + Name — matches Sidebar exactly */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-accent-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-accent-500/30">
-            <Shield className="w-8 h-8 text-white" />
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <DocSentinelLogo size={48} />
+            <div className="text-left">
+              <h1 className="font-black tracking-tight text-2xl leading-tight text-primary-900">
+                DocSentinel
+              </h1>
+              <p className="text-sm font-medium text-primary-400">AI Verification</p>
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-primary-900">Create account</h1>
-          <p className="text-primary-500 mt-1">Start verifying documents</p>
+          <p className="text-primary-500 mt-2">Create your account to get started</p>
         </div>
 
         <div className="card p-8">

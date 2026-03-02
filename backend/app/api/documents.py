@@ -153,52 +153,55 @@ async def process_document_async(
             loop.run_in_executor(_executor, run_visual),
         )
 
-        # ── Save to DB ────────────────────────────────────────────────────────
+        # ── Save to DB (BATCH inserts — 3 calls instead of 20+) ─────────────────
         supabase = get_supabase()
+        now = datetime.utcnow().isoformat()
 
-        for field in fields_raw:
+        if fields_raw:
             try:
-                supabase.table("extracted_fields").insert({
+                supabase.table("extracted_fields").insert([{
                     "document_id":        file_id,
-                    "field_name":         field.get("field_name", "unknown"),
-                    "field_value":        str(field.get("field_value", "")) if field.get("field_value") else None,
-                    "confidence_score":   field.get("confidence_score", 0),
-                    "is_valid":           field.get("is_valid", False),
-                    "validation_message": field.get("validation_message", ""),
-                    "verdict_color":      field.get("verdict_color"),
-                    "verdict_icon":       field.get("verdict_icon"),
-                    "created_at":         datetime.utcnow().isoformat()
-                }).execute()
+                    "field_name":         f.get("field_name", "unknown"),
+                    "field_value":        str(f.get("field_value", "")) if f.get("field_value") else None,
+                    "confidence_score":   f.get("confidence_score", 0),
+                    "is_valid":           f.get("is_valid", False),
+                    "validation_message": f.get("validation_message", ""),
+                    "verdict_color":      f.get("verdict_color"),
+                    "verdict_icon":       f.get("verdict_icon"),
+                    "created_at":         now
+                } for f in fields_raw]).execute()
+                logger.info(f"[{file_id}] Saved {len(fields_raw)} fields in 1 batch call")
             except Exception as fe:
-                logger.warning(f"[{file_id}] Field save failed: {fe}")
+                logger.warning(f"[{file_id}] Batch field save failed: {fe}")
 
-        fraud_checks_objs = []
-        for check in fraud_raw:
+        fraud_checks_objs = fraud_raw
+        if fraud_raw:
             try:
-                supabase.table("fraud_checks").insert({
+                supabase.table("fraud_checks").insert([{
                     "document_id":   file_id,
-                    "check_type":    check.get("check_type", "unknown"),
-                    "is_suspicious": check.get("is_suspicious", False),
-                    "risk_score":    check.get("risk_score", 0),
-                    "details":       check.get("details", {}),
-                    "created_at":    datetime.utcnow().isoformat()
-                }).execute()
-                fraud_checks_objs.append(check)
+                    "check_type":    c.get("check_type", "unknown"),
+                    "is_suspicious": c.get("is_suspicious", False),
+                    "risk_score":    c.get("risk_score", 0),
+                    "details":       c.get("details", {}),
+                    "created_at":    now
+                } for c in fraud_raw]).execute()
+                logger.info(f"[{file_id}] Saved {len(fraud_raw)} fraud checks in 1 batch call")
             except Exception as fce:
-                logger.warning(f"[{file_id}] Fraud check save failed: {fce}")
+                logger.warning(f"[{file_id}] Batch fraud save failed: {fce}")
 
-        for el in visual_raw:
+        if visual_raw:
             try:
-                supabase.table("visual_elements").insert({
+                supabase.table("visual_elements").insert([{
                     "document_id":      file_id,
                     "element_type":     el.get("element_type", "unknown"),
                     "is_present":       el.get("is_present", False),
                     "confidence_score": el.get("confidence_score", 0),
                     "details":          el.get("details", {}),
-                    "created_at":       datetime.utcnow().isoformat()
-                }).execute()
+                    "created_at":       now
+                } for el in visual_raw]).execute()
+                logger.info(f"[{file_id}] Saved {len(visual_raw)} visual elements in 1 batch call")
             except Exception as ve:
-                logger.warning(f"[{file_id}] Visual element save failed: {ve}")
+                logger.warning(f"[{file_id}] Batch visual save failed: {ve}")
 
         # ── Final verdict & scores ────────────────────────────────────────────
         verdict_field   = next((f for f in fields_raw if f.get("field_name") == "__verdict__"), None)

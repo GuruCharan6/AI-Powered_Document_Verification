@@ -105,8 +105,8 @@ class DocumentClassifier:
 
         result = self._classify_with_regex(text)
 
-        # If low confidence, use AI for better accuracy
-        if result["confidence"] < 50:
+        # Only use AI if regex confidence is very low (saves ~2s per upload)
+        if result["confidence"] < 30:
             try:
                 ai_result = self._classify_with_ai(text)
                 if ai_result["confidence"] > result["confidence"]:

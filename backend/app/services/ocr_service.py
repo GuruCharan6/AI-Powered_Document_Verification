@@ -36,7 +36,7 @@ def pdf_to_image_path(pdf_path: str) -> str:
         doc = fitz.open(pdf_path)
         page = doc[0]
         # Render at high DPI for better OCR quality
-        mat = fitz.Matrix(3.0, 3.0)  # 3x zoom = ~216 DPI
+        mat = fitz.Matrix(1.5, 1.5)  # 1.5x zoom = ~108 DPI — faster, still readable
         pix = page.get_pixmap(matrix=mat)
         img_path = pdf_path.replace(".pdf", "_page1.png")
         pix.save(img_path)
@@ -129,26 +129,16 @@ class OCRService:
                     "content": [
                         {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{image_data}"}},
                         {"type": "text", "text": (
-                            "This is an Indian government document. It may be written in Telugu (తెలుగు), "
-                            "Hindi (हिंदी), Tamil (தமிழ்), Kannada, Malayalam, Bengali, Marathi, "
-                            "Gujarati, or English or a mix of these.\n\n"
-                            "EXTRACT ALL TEXT with these rules:\n"
-                            "1. Extract text exactly as printed in original script\n"
-                            "2. Telugu script: also provide English transliteration beside it\n"
-                            "3. Hindi/Devanagari: also provide English transliteration beside it\n"
-                            "4. Tamil script: also provide English transliteration beside it\n"
-                            "5. Preserve all numbers, dates, ID numbers exactly\n"
-                            "6. Include every field label and value\n"
-                            "7. Include stamps, seals, issuing authority, watermarks\n"
-                            "8. Format each line as: 'Field: Value'\n"
-                            "9. Do NOT skip or summarize any text\n"
-                            "10. If regional and English both appear on same line, include both\n\n"
-                            "Output raw extracted text only."
+                            "Extract ALL text from this Indian government document. "
+                            "It may be in Telugu, Hindi, Tamil, Kannada, or English. "
+                            "Rules: preserve original script + add English transliteration for regional text. "
+                            "Keep all numbers, dates, IDs exact. Include stamps and authority names. "
+                            "Output as plain text only."
                         )}
                     ]
                 }],
                 temperature=0.0,
-                max_tokens=3000,
+                max_tokens=1500,  # reduced for speed — enough for most documents
             )
             return response.choices[0].message.content.strip()
 
@@ -189,8 +179,8 @@ class OCRService:
                 return ""
 
             h, w = img.shape[:2]
-            if h < 1500 or w < 1500:
-                scale = max(1500 / h, 1500 / w)
+            if h < 1000 or w < 1000:
+                scale = max(1000 / h, 1000 / w)
                 img = cv2.resize(img, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_CUBIC)
 
             img = self._deskew(img)

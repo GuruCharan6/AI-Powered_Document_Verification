@@ -47,9 +47,9 @@ class FraudDetector:
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             noise = _f(cv2.Laplacian(gray, cv2.CV_64F).var())
 
-            # SIFT keypoint analysis
-            sift = cv2.SIFT_create()
-            kps, _ = sift.detectAndCompute(gray, None)
+            # ORB keypoint analysis (much faster than SIFT)
+            orb = cv2.ORB_create(nfeatures=500)
+            kps = orb.detect(gray, None)
             kp_count = len(kps)
 
             # ELA: compare original vs re-compressed JPEG

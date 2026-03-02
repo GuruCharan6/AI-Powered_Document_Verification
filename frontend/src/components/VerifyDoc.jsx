@@ -91,19 +91,41 @@ const VerifyDoc = () => {
 
   const pollStatus = (id) => {
     let attempts = 0
+    let errorCount = 0
+    const MAX_ERRORS = 5      // allow up to 5 network errors before giving up
+    const MAX_ATTEMPTS = 60   // ~2.5 minutes max polling time
+
     const check = async () => {
       try {
         const { data } = await api.get(`/documents/${id}/status`)
         attempts++
+        errorCount = 0  // reset error count on success
         setStepIndex(Math.min(Math.floor(attempts / 2) + 1, PROCESSING_STEPS.length - 1))
         setProgress(Math.min(15 + attempts * 7, 88))
+
         if (data.status === 'completed') {
           setProgress(95); setStepIndex(PROCESSING_STEPS.length - 1)
           await load(id); setProgress(100); setUploading(false)
         } else if (data.status === 'failed') {
-          setUploadError(data.error_message || 'Processing failed'); setUploading(false)
-        } else { setTimeout(check, 2500) }
-      } catch { setUploading(false) }
+          setUploadError(data.error_message || 'Processing failed')
+          setUploading(false)
+        } else if (attempts >= MAX_ATTEMPTS) {
+          setUploadError('Processing is taking too long. Please try again.')
+          setUploading(false)
+        } else {
+          setTimeout(check, 2500)
+        }
+      } catch (err) {
+        errorCount++
+        console.warn(`Poll attempt ${attempts} failed (${errorCount}/${MAX_ERRORS}):`, err)
+        if (errorCount >= MAX_ERRORS) {
+          setUploadError('Connection error. Please refresh and check your document in the Dashboard.')
+          setUploading(false)
+        } else {
+          // Retry after a short delay — don't give up on transient errors
+          setTimeout(check, 3000)
+        }
+      }
     }
     check()
   }

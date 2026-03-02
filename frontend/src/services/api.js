@@ -6,7 +6,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000,
+  timeout: 70000, // 60 seconds — documents can take up to ~55s to process
 })
 
 // Add request logging

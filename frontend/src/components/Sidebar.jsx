@@ -10,7 +10,7 @@ import {
   Sun,
   Moon,
 } from 'lucide-react'
-import DocSentinelLogo from './DocSentinellogo'
+import DocSentinelLogo from './DocSentinelLogo'
 
 const Sidebar = () => {
   const { user, logout } = useAuth()

@@ -3,12 +3,14 @@ import axios from 'axios'
 // Use environment variable for backend URL
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
+console.log('API_BASE_URL:', API_BASE_URL) // Debug log
+
 const api = axios.create({
   baseURL: `${API_BASE_URL}/api/v1`,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 70000, // 60 seconds — documents can take up to ~55s to process
+  timeout: 70000,
 })
 
 // Add request logging

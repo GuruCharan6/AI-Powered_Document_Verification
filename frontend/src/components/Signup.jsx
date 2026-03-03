@@ -34,7 +34,7 @@ const Signup = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-primary-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-white p-4">
       <div className="w-full max-w-md">
 
         {/* Logo + Name — matches Sidebar exactly */}

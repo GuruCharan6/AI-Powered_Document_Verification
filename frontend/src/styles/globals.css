@@ -62,9 +62,9 @@
 }
 
 .dark .card {
-  background-color: #1e2535;
-  border-color: #2d3748;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+  background-color: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
 }
 
 .dark .sidebar-link {
@@ -82,9 +82,13 @@
 }
 
 .dark .input-field {
-  background-color: #252d40;
-  border-color: #2d3748;
-  color: #d1d5db;
+  background-color: #ffffff;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.dark .input-field::placeholder {
+  color: #9ca3af;
 }
 
 .dark .input-field::placeholder {

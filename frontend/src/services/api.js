@@ -1,8 +1,10 @@
 import axios from 'axios'
 
-// Use direct URL to backend
+// Use environment variable for backend URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api/v1',
+  baseURL: `${API_BASE_URL}/api/v1`,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -27,7 +29,7 @@ api.interceptors.response.use(
   (error) => {
     console.error('API Error:', error.message)
     if (error.code === 'ERR_NETWORK') {
-      console.error('Cannot connect to backend at http://localhost:8000')
+      console.error(`Cannot connect to backend at ${API_BASE_URL}`)
     }
     if (error.response?.status === 401) {
       localStorage.removeItem('token')

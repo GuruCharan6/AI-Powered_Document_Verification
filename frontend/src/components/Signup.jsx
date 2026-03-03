@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { Loader2 } from 'lucide-react'
-import DocSentinelLogo from './DocSentinellogo'
+import DocSentinelLogo from './DocSentinelLogo'
 
 const Signup = () => {
   const [form, setForm] = useState({ email: '', password: '', full_name: '', department: '' })
